@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "btc-app"
+version = "0.1.0"
+description = "Trading automation for BTC, ETH, ADA, XRP, etc."
+authors = ["Philip De Lorenzo <philip.delorenzo@gmail.com>"]
+readme = "README.md"
+packages = [{include = "btc_app"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+fastapi = "^0.109.2"
+uvicorn = "^0.27.1"
+reactpy = "^1.0.2"
+pyotp = "^2.9.0"
+robin-stocks = "^3.0.6"
+authenticator = "^1.1.3"
+python-dotenv = "^1.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
