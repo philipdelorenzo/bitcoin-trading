@@ -44,3 +44,7 @@ class RH_CRYPTO():
         """Returns the symbols for the stocks in your Robinhood portfolio."""
         return rh.crypto.get_crypto_positions(info=None)
     
+
+    def get_crypto_quote(self, ticker, info=None):
+        """Returns the current price of the specified stock."""
+        return rh.crypto.get_crypto_quote(ticker, info=None)
