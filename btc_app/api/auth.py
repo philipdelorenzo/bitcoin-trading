@@ -16,13 +16,12 @@ def api_key_auth(api_key_header: str = Security(api_key_header)) -> str:
         return api_key_header
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="[ERROR] - Forbidden: Invalid or missing API Key",
+        detail="Invalid or missing API Key",
     )
-
 
 def api_key_oauth(api_key: str = Depends(oauth2_scheme)):
     if api_key not in api_keys:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Forbidden"
+            detail="Invalid or missing API Key",
         )

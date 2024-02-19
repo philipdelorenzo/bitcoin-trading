@@ -11,6 +11,9 @@ class RH_CRYPTO():
         self._login() # Log in to Robinhood
         self.my_portfolio = self._get_portfolio_symbols()
         self.crypto_portfolio = self._get_crypto_portfolio()
+        self.account_profile = self._get_account_profile()
+        self.investment_profile = self._get_investment_profile()
+        self.phoenix_account = self._get_phoenix_account()
     
     def _login(self):
         """Logs in to Robinhood."""
@@ -23,7 +26,6 @@ class RH_CRYPTO():
         except Exception as e:
             print(f"Error: {e}")
             raise e
-        
         
     def _get_portfolio_symbols(self):
         """
@@ -44,7 +46,23 @@ class RH_CRYPTO():
         """Returns the symbols for the stocks in your Robinhood portfolio."""
         return rh.crypto.get_crypto_positions(info=None)
     
-
     def get_crypto_quote(self, ticker, info=None):
         """Returns the current price of the specified stock."""
         return rh.crypto.get_crypto_quote(ticker, info=None)
+
+    def get_markets(self):
+        """Returns the current markets and data associated with them."""
+        return rh.markets.get_markets()
+
+    def _get_account_profile(self):
+        """Returns the user's account profile information."""
+        return rh.profiles.load_account_profile()
+    
+    def _get_investment_profile(self):
+        """Returns the user's investment profile information."""
+        return rh.profiles.load_investment_profile()
+
+    def _get_phoenix_account(self):
+        """Returns the user's Phoenix account information."""
+        return rh.account.load_phoenix_account()
+    

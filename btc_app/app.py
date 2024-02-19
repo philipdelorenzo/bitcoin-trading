@@ -7,29 +7,38 @@ from fastapi.security import OAuth2PasswordBearer
 from btc_app.api.auth import api_key_auth
 from btc_app.rh_src.robinhood import RH_CRYPTO
 
+# Config data
+from btc_app import _app, _version, _description, _authors
+
 app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"status": "OK!"}
+    _data = {"status": status.HTTP_200_OK}
+    _response = json.dumps(_data, indent=4, default=str)
+    return Response(_response)
 
 @app.get("/public")
 def public():
     """A public endpoint that does not require any authentication."""
-    return {"message": "Public Endpoint. No API Key required."}
-
-#@app.get("/protected", dependencies=[Depends(api_key_auth)])
-@app.get("/protected", dependencies=[Depends(api_key_auth)])
-def protected():
-    """A private endpoint that requires a valid API key to be provided."""
-    return {"message": "API Key is valid. You can access the private endpoint."}
+    _data = {
+        "status": status.HTTP_200_OK,
+        "app": {
+            "name": _app,
+            "description": _description,
+            "authors": _authors,
+            "version": _version,
+            },
+        }
+    _response = json.dumps(_data, indent=4, default=str)
+    return Response(_response)
 
 @app.get("/robinhood/crypto_portfolio", dependencies=[Depends(api_key_auth)])
 def get_crypto_portfolio():
     """Returns the symbols for the stocks in your Robinhood portfolio."""
     _robinhood_crypto_data = RH_CRYPTO()
     _crypto_portfolio_data = _robinhood_crypto_data.crypto_portfolio
-    _response = json.dumps(_robinhood_crypto_data.crypto_portfolio, indent=4, default=str)
+    _response = json.dumps(_crypto_portfolio_data, indent=4, default=str)
     return Response(_response)
 
 @app.get("/robinhood/invested_tickers", dependencies=[Depends(api_key_auth)])
@@ -60,4 +69,36 @@ def get_crypto_quotes():
         _quotes[ticker] = _robinhood_crypto_data.get_crypto_quote(ticker, info=None)
 
     _response = json.dumps(_quotes, indent=4, default=str)
+    return Response(_response)
+
+@app.get("/robinhood/markets", dependencies=[Depends(api_key_auth)])
+def get_markets():
+    """Returns the symbols for the stocks in your Robinhood portfolio."""
+    _robinhood_crypto_data = RH_CRYPTO()
+    _markets = _robinhood_crypto_data.get_markets()
+    _response = json.dumps(_markets, indent=4, default=str)
+    return Response(_response)
+
+@app.get("/robinhood/account_profile", dependencies=[Depends(api_key_auth)])
+def get_account_profile():
+    """Returns the symbols for the stocks in your Robinhood portfolio."""
+    _robinhood_crypto_data = RH_CRYPTO()
+    _profile = _robinhood_crypto_data.account_profile
+    _response = json.dumps(_profile, indent=4, default=str)
+    return Response(_response)
+
+@app.get("/robinhood/investment_profile", dependencies=[Depends(api_key_auth)])
+def get_investment_profile():
+    """Returns the symbols for the stocks in your Robinhood portfolio."""
+    _robinhood_crypto_data = RH_CRYPTO()
+    _profile = _robinhood_crypto_data.investment_profile
+    _response = json.dumps(_profile, indent=4, default=str)
+    return Response(_response)
+
+@app.get("/robinhood/phoenix_account", dependencies=[Depends(api_key_auth)])
+def get_phoenix_account():
+    """Returns the symbols for the stocks in your Robinhood portfolio."""
+    _robinhood_crypto_data = RH_CRYPTO()
+    _profile = _robinhood_crypto_data.phoenix_account
+    _response = json.dumps(_profile, indent=4, default=str)
     return Response(_response)
