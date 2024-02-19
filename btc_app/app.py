@@ -1,24 +1,11 @@
-from fastapi import FastAPI, HTTPException, status, Security
+import json
+from fastapi import Response
+from fastapi import FastAPI, HTTPException, status, Security, Depends 
 from fastapi.security import APIKeyHeader, APIKeyQuery
+from fastapi.security import OAuth2PasswordBearer
 
-import btc_app
-
-api_keys = [
-    "my_api_key"
-] # These need to be retrieved from a secure location, database, etc.
-
-api_keys.append(btc_app.api_key) # Let's add the API key from the config file
-
-# Define the API key header
-api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
-
-def get_api_key(api_key_header: str = Security(api_key_header)) -> str:
-    if api_key_header in api_keys:
-        return api_key_header
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid or missing API Key",
-    )
+from btc_app.api.auth import api_key_auth
+from btc_app.rh_src.robinhood import RH_CRYPTO
 
 app = FastAPI()
 
@@ -31,10 +18,28 @@ def public():
     """A public endpoint that does not require any authentication."""
     return {"message": "Public Endpoint. No API Key required."}
 
-@app.get("/protected")
-def private(api_key: str = Security(get_api_key)):
+#@app.get("/protected", dependencies=[Depends(api_key_auth)])
+@app.get("/protected", dependencies=[Depends(api_key_auth)])
+def protected():
     """A private endpoint that requires a valid API key to be provided."""
-    if api_key in api_keys:
-        return {"message": "API Key is valid. You can access the private endpoint."}
-    
-    return {"message": "Private Endpoint. API Key required."}
+    return {"message": "API Key is valid. You can access the private endpoint."}
+
+@app.get("/robinhood/crypto_portfolio", dependencies=[Depends(api_key_auth)])
+def get_crypto_portfolio():
+    """Returns the symbols for the stocks in your Robinhood portfolio."""
+    _robinhood_crypto_data = RH_CRYPTO()
+    _crypto_portfolio_data = _robinhood_crypto_data.crypto_portfolio
+    _response = json.dumps(_robinhood_crypto_data.crypto_portfolio, indent=4, default=str)
+    return Response(_response)
+
+@app.get("/robinhood/crypto_quotes", dependencies=[Depends(api_key_auth)])
+def get_crypto_quotes():
+    """Returns the symbols for the stocks in your Robinhood portfolio."""
+    _robinhood_crypto_data = RH_CRYPTO()
+    _ticker_symbols = []
+    _crypto_portfolio_data = _robinhood_crypto_data.crypto_portfolio
+    for item in _crypto_portfolio_data:
+        _ticker_symbols.append(item["currency"]["code"]) if item["currency"]["code"] not in _ticker_symbols and item["currency"]["code"] is not None else None
+
+    _response = json.dumps(_ticker_symbols, indent=4, default=str)
+    return Response(_response)
