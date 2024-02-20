@@ -14,6 +14,7 @@ class RH_CRYPTO():
         self.account_profile = self._get_account_profile()
         self.investment_profile = self._get_investment_profile()
         self.phoenix_account = self._get_phoenix_account()
+        self.holdings = self._get_holdings()
     
     def _login(self):
         """Logs in to Robinhood."""
@@ -66,3 +67,6 @@ class RH_CRYPTO():
         """Returns the user's Phoenix account information."""
         return rh.account.load_phoenix_account()
     
+    def _get_holdings(self):
+        """Returns the user's holdings."""
+        return rh.account.build_holdings()

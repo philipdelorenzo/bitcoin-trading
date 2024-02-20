@@ -17,7 +17,7 @@ def get_crypto_portfolio():
     _robinhood_crypto_data = RH_CRYPTO()
     _crypto_portfolio_data = _robinhood_crypto_data.crypto_portfolio
     _response = json.dumps(_crypto_portfolio_data, indent=4, default=str)
-    return Response(_response)
+    return Response(content=_response, media_type="application/json")
 
 @router.get("/invested_symbols", dependencies=[Depends(api_key_auth)])
 def get_crypto_tickers():
@@ -30,7 +30,7 @@ def get_crypto_tickers():
         _ticker_symbols.append(item["currency"]["code"]) if item["currency"]["code"] not in _ticker_symbols and item["currency"]["code"] is not None else None
 
     _response = json.dumps(_ticker_symbols, indent=4, default=str)
-    return Response(_response)
+    return Response(content=_response, media_type="application/json")
 
 @router.get("/quotes", dependencies=[Depends(api_key_auth)])
 def get_crypto_quotes():
@@ -47,4 +47,4 @@ def get_crypto_quotes():
         _quotes[ticker] = _robinhood_crypto_data.get_crypto_quote(ticker, info=None)
 
     _response = json.dumps(_quotes, indent=4, default=str)
-    return Response(_response)
+    return Response(content=_response, media_type="application/json")

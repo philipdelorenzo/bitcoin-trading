@@ -16,7 +16,7 @@ def get_account_profile():
     _robinhood_crypto_data = RH_CRYPTO()
     _profile = _robinhood_crypto_data.account_profile
     _response = json.dumps(_profile, indent=4, default=str)
-    return Response(_response)
+    return Response(content=_response, media_type="application/json")
 
 @router.get("/investment", dependencies=[Depends(api_key_auth)])
 def get_investment_profile():
@@ -24,7 +24,7 @@ def get_investment_profile():
     _robinhood_crypto_data = RH_CRYPTO()
     _profile = _robinhood_crypto_data.investment_profile
     _response = json.dumps(_profile, indent=4, default=str)
-    return Response(_response)
+    return Response(content=_response, media_type="application/json")
 
 @router.get("/phoenix", dependencies=[Depends(api_key_auth)])
 def get_phoenix_account():
@@ -32,4 +32,13 @@ def get_phoenix_account():
     _robinhood_crypto_data = RH_CRYPTO()
     _profile = _robinhood_crypto_data.phoenix_account
     _response = json.dumps(_profile, indent=4, default=str)
-    return Response(_response)
+    return Response(content=_response, media_type="application/json")
+
+@router.get("/holdings", dependencies=[Depends(api_key_auth)])
+def get_holdings():
+    """Returns the current holdings and their information."""
+    _robinhood_crypto_data = RH_CRYPTO()
+    _profile = _robinhood_crypto_data.holdings
+    _response = json.dumps(_profile, indent=4, default=str)
+    return Response(content=_response, media_type="application/json")
+

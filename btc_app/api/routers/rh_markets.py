@@ -16,4 +16,4 @@ def get_markets():
     _robinhood_crypto_data = RH_CRYPTO()
     _markets = _robinhood_crypto_data.get_markets()
     _response = json.dumps(_markets, indent=4, default=str)
-    return Response(_response)
+    return Response(content=_response, media_type="application/json")

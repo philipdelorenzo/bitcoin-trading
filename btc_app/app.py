@@ -1,7 +1,9 @@
 import json
+from pprint import pprint
+
 from fastapi import Response
 from fastapi import FastAPI, status
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 
 from btc_app.api.routers import rh_crypto, rh_profile, rh_markets
 
@@ -21,7 +23,8 @@ def home():
 def health():
     _data = {"status": status.HTTP_200_OK}
     _response = json.dumps(_data, indent=4, default=str)
-    return Response(_response)
+    #return Response(_response) # This is pprinted in the browser
+    return Response(content=_response, media_type="application/json")
 
 @app.get("/about")
 def public():
@@ -36,4 +39,4 @@ def public():
             },
         }
     _response = json.dumps(_data, indent=4, default=str)
-    return Response(_response)
+    return Response(content=_response, media_type="application/json")

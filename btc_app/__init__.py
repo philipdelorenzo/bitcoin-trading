@@ -16,8 +16,11 @@ api_key = _config["api"]["api_key"]
 
 # Let's get the Robinhood credentials from the .env file
 load_dotenv(os.path.join(MAIN, '.env'))
+load_dotenv(os.path.join(MAIN, '.api_key'))
+
 robinhood_user = os.getenv('ROBINHOOD_USER')
 robinhood_pass = os.getenv('ROBINHOOD_PASS')
+btc_app_robinhood_api_key = os.getenv('BTC_APP_ROBINHOOD_API_KEY')
 robinhood_opt_key = os.getenv('ROBINHOOD_OPT_KEY')
 
 google_user = os.getenv('GOOGLE_USER')
