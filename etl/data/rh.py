@@ -1,10 +1,8 @@
-import os
 import pyotp
-import requests
 import robin_stocks.robinhood as rh
 
 from typing import Any
-from btc_app import robinhood_user, robinhood_pass, robinhood_opt_key
+from data.config import robinhood_user, robinhood_pass, robinhood_opt_key
 
 class RH_CRYPTO():
     """This class instantiates all the methods needed to interact with the Robinhood API (crpyto)."""
@@ -15,8 +13,6 @@ class RH_CRYPTO():
         self.crypto_portfolio = self._get_crypto_portfolio()
         self.account_profile = self._get_account_profile()
         self.investment_profile = self._get_investment_profile()
-        self.phoenix_account = self._get_phoenix_account()
-        self.holdings = self._get_holdings()
     
     def _login(self):
         """Logs in to Robinhood."""
@@ -52,9 +48,9 @@ class RH_CRYPTO():
         for item in holdings_data:
             if not item:
                 continue
-
             symbol = item["currency"]["code"]
-            symbols.append(symbol) if symbol not in symbols else None
+            quant = float(item["quantity"])
+            symbols.append(symbol) if symbol not in symbols and quant > 0 else None
         
         return symbols
     
@@ -78,10 +74,28 @@ class RH_CRYPTO():
         """Returns the user's investment profile information."""
         return rh.profiles.load_investment_profile()
 
-    def _get_phoenix_account(self):
+    def get_phoenix_account(self):
         """Returns the user's Phoenix account information."""
         return rh.account.load_phoenix_account()
     
-    def _get_holdings(self):
+    def get_holdings(self):
         """Returns the user's holdings."""
-        return rh.account.build_holdings()
+        return rh.crypto.get_crypto_positions(info=None)
+
+    def get_coin_quantities(self) -> dict:
+        """Returns the user's crypto coins, and quantity.
+        
+        Returns:
+            dict: A dictionary with the coin symbol as the key, and the quantity as the value.
+        """
+        _response = {}
+        sym = self.get_crypto_symbols()
+        _data = rh.crypto.get_crypto_positions(info=None)
+        for item in _data:
+            if not item:
+                continue
+
+            if item["currency"]["code"] in sym:
+                _response.update({item["currency"]["code"]: float(item["quantity"])})
+
+        return _response

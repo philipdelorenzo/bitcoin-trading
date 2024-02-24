@@ -10,10 +10,11 @@ router = APIRouter(
     dependencies=[Depends(api_key_auth)],
 )
 
-@router.get("/", dependencies=[Depends(api_key_auth)])
-def get_markets():
-    """Returns the symbols for the stocks in your Robinhood portfolio."""
-    _robinhood_crypto_data = RH_CRYPTO()
-    _markets = _robinhood_crypto_data.get_markets()
-    _response = json.dumps(_markets, indent=4, default=str)
-    return Response(content=_response, media_type="application/json")
+
+#@router.get("/", dependencies=[Depends(api_key_auth)])
+#def get_markets():
+#    """Returns the symbols for the stocks in your Robinhood portfolio."""
+#    _robinhood_crypto_data = RH_CRYPTO()
+#    _markets = _robinhood_crypto_data.get_markets()
+#    _response = json.dumps(_markets, indent=4, default=str)
+#    return Response(content=_response, media_type="application/json")

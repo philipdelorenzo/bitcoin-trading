@@ -1,0 +1,4 @@
+halo==0.0.31
+robin-stocks==3.0.6
+pyotp==2.9.0
+redis==5.0.1
