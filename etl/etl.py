@@ -27,14 +27,19 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 # Let's get the data from Robinhood and save it to Redis
-data = {}
-data.update({"crypto_portfolio": rhood.crypto_portfolio})
-data.update({"phoenix_account": rhood.get_phoenix_account()})
-data.update({"crypto_symbols": rhood.get_crypto_symbols()})
-data.update({"crypto_holdings": rhood.get_holdings()})
-data.update({"current_coins": rhood.get_coin_quantities()})
+def pull_rhood_values(data: dict = {}) -> dict:
+    """Updates the data dictionary with the latest values from Robinhood."""
+    data.update({"crypto_portfolio": rhood.crypto_portfolio})
+    data.update({"phoenix_account": rhood.get_phoenix_account()})
+    data.update({"crypto_symbols": rhood.get_crypto_symbols()})
+    data.update({"crypto_holdings": rhood.get_holdings()})
+    data.update({"current_coins": rhood.get_coin_quantities()})
+    data.update({"order_history": rhood.get_order_history()})
+
+    return data
 
 while True:
+    data = pull_rhood_values() # This gets the values from Robinhood and updates the data dictionary
     for k, v in data.items():
         r.set(k, json.dumps(v)) # Save the data to Redis
 

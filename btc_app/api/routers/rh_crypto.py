@@ -13,7 +13,7 @@ from btc_app import redis_host, redis_port, log_file
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
 
 # Set up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+#logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -52,17 +52,8 @@ def crypto_symbols():
 @router.get("/quotes", dependencies=[Depends(api_key_auth)])
 def get_crypto_quotes():
     """Returns the symbols for the stocks in your Robinhood portfolio."""
-    _quotes = {}
-    _robinhood_crypto_data = RH_CRYPTO()
-    r = redis.Redis(host=redis_host, port=redis_port, db=0)
-    _crypto_symbols = r.get('crypto_symbols')
-    _ticker_symbols = json.loads(_crypto_symbols)
-    # We need to get the quote directly from the Robinhood API
-    for ticker in _ticker_symbols:
-        _quotes[ticker] = _robinhood_crypto_data.get_crypto_quote(ticker, info=None)
-
-    _response = json.dumps(_quotes, indent=4, default=str)
-    return Response(content=_response, media_type="application/json")
+    _quotes = build_quote()
+    return Response(content=_quotes, media_type="application/json")
 
 @router.get("/current_coins", dependencies=[Depends(api_key_auth)])
 def get_current_coins():
@@ -82,3 +73,28 @@ def get_current_coins():
         _current_coins = _current_coins.decode('utf-8')
 
     return Response(content=_current_coins, media_type="application/json")
+
+@router.get("/order_history", dependencies=[Depends(api_key_auth)])
+def get_order_history():
+    """Returns order history of crypto purchases."""
+    r = redis.Redis(host=redis_host, port=redis_port, db=0)
+    _order_history = r.get('order_history')
+
+    if type(_order_history) == bytes:
+        _order_history = _order_history.decode('utf-8')
+
+    return Response(content=_order_history, media_type="application/json")
+
+##### Non accessible functions #####
+def build_quote() -> dict:
+    """Returns the symbols for the stocks in your Robinhood portfolio."""
+    _quote = {}
+    _robinhood_crypto_data = RH_CRYPTO()
+    #r = redis.Redis(host=redis_host, port=redis_port, db=0)
+    _crypto_symbols = r.get('crypto_symbols')
+    _ticker_symbols = json.loads(_crypto_symbols)
+    # We need to get the quote directly from the Robinhood API
+    for ticker in _ticker_symbols:
+        _quote[ticker] = _robinhood_crypto_data.get_crypto_quote(ticker, info=None)
+
+    return _quote

@@ -99,3 +99,7 @@ class RH_CRYPTO():
                 _response.update({item["currency"]["code"]: float(item["quantity"])})
 
         return _response
+
+    def get_order_history(self) -> list:
+        """Returns the user's order history."""
+        return rh.orders.get_all_crypto_orders(info=None)
