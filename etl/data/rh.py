@@ -26,6 +26,14 @@ class RH_CRYPTO():
             print(f"Error: {e}")
             raise e
   
+    def _get_account_profile(self):
+        """Returns the user's account profile information."""
+        return rh.profiles.load_account_profile()
+    
+    def _get_investment_profile(self):
+        """Returns the user's investment profile information."""
+        return rh.profiles.load_investment_profile()
+
     def _get_portfolio_symbols(self):
         """
         Returns: the symbol for each stock in your portfolio as a list of strings
@@ -40,7 +48,11 @@ class RH_CRYPTO():
             symbols.append(symbol)
         
         return symbols
-    
+
+    def _get_crypto_portfolio(self):
+        """Returns the symbols for the stocks in your Robinhood portfolio."""
+        return rh.crypto.get_crypto_positions(info=None)
+     
     def get_crypto_symbols(self, symbols: list = []) -> list:
         """Returns the symbols for the stocks in your Robinhood portfolio."""
         symbols = []
@@ -54,10 +66,6 @@ class RH_CRYPTO():
         
         return symbols
     
-    def _get_crypto_portfolio(self):
-        """Returns the symbols for the stocks in your Robinhood portfolio."""
-        return rh.crypto.get_crypto_positions(info=None)
-    
     def get_crypto_quote(self, ticker, info=None):
         """Returns the current price of the specified stock."""
         return rh.crypto.get_crypto_quote(ticker, info=None)
@@ -65,14 +73,6 @@ class RH_CRYPTO():
     def get_markets(self):
         """Returns the current markets and data associated with them."""
         return rh.markets.get_markets()
-
-    def _get_account_profile(self):
-        """Returns the user's account profile information."""
-        return rh.profiles.load_account_profile()
-    
-    def _get_investment_profile(self):
-        """Returns the user's investment profile information."""
-        return rh.profiles.load_investment_profile()
 
     def get_phoenix_account(self):
         """Returns the user's Phoenix account information."""
@@ -103,3 +103,25 @@ class RH_CRYPTO():
     def get_order_history(self) -> list:
         """Returns the user's order history."""
         return rh.orders.get_all_crypto_orders(info=None)
+    
+    def buy_crypto(self, symbol: str) -> Any:
+        """Buys the specified crypto."""
+        return rh.orders.order_buy_crypto_by_price(symbol)
+
+    def cancel_all_crypto_orders(self) -> Any:
+        """Cancels all open crypto orders."""
+        return rh.orders.cancel_all_crypto_orders()
+    
+    def cancel_all_option_orders(self) -> Any:
+        """Cancels all open option orders."""
+        return rh.orders.cancel_all_option_orders()
+    
+    def order_buy_fractional_by_price():
+        """Buys a fractional amount of the specified crypto."""
+        pass
+        return rh.orders.order_buy_crypto_fractional_by_price()
+    
+    def order_sell_fractional_by_price():
+        """Sells a fractional amount of the specified crypto."""
+        pass
+        return rh.orders.order_sell_fractional_by_price()

@@ -85,16 +85,17 @@ def get_order_history():
 
     return Response(content=_order_history, media_type="application/json")
 
+@router.get("buy", dependencies=[Depends(api_key_auth)])
+def buy():
+    pass
+
+@router.get("sell", dependencies=[Depends(api_key_auth)])
+def sell():
+    pass
+
 ##### Non accessible functions #####
 def build_quote() -> dict:
     """Returns the symbols for the stocks in your Robinhood portfolio."""
-    _quote = {}
-    _robinhood_crypto_data = RH_CRYPTO()
-    #r = redis.Redis(host=redis_host, port=redis_port, db=0)
-    _crypto_symbols = r.get('crypto_symbols')
-    _ticker_symbols = json.loads(_crypto_symbols)
-    # We need to get the quote directly from the Robinhood API
-    for ticker in _ticker_symbols:
-        _quote[ticker] = _robinhood_crypto_data.get_crypto_quote(ticker, info=None)
-
-    return _quote
+    r = redis.Redis(host=redis_host, port=redis_port, db=0)
+    _quotes = r.get('quotes')
+    return _quotes

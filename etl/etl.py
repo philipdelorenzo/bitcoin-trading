@@ -35,6 +35,11 @@ def pull_rhood_values(data: dict = {}) -> dict:
     data.update({"crypto_holdings": rhood.get_holdings()})
     data.update({"current_coins": rhood.get_coin_quantities()})
     data.update({"order_history": rhood.get_order_history()})
+    
+    # Let's set the empty quotes dictionary and populate it with the latest quotes
+    data["quotes"] = {}
+    for ticker in rhood.get_crypto_symbols():
+        data["quotes"].update({ticker: rhood.get_crypto_quote(ticker=ticker)})
 
     return data
 
