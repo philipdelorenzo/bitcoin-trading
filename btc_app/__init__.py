@@ -50,3 +50,4 @@ _authors = _tomlcfg["tool"]["poetry"]["authors"]
 
 # Logging
 log_file = os.path.join("/btc_app_data", "btc_app.log")
+transaction_log_file = os.path.join("/btc_app_data", "btc_transaction_records.log")

@@ -13,7 +13,6 @@ from btc_app import redis_host, redis_port, log_file
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
 
 # Set up logging
-#logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -85,13 +84,6 @@ def get_order_history():
 
     return Response(content=_order_history, media_type="application/json")
 
-@router.get("buy", dependencies=[Depends(api_key_auth)])
-def buy():
-    pass
-
-@router.get("sell", dependencies=[Depends(api_key_auth)])
-def sell():
-    pass
 
 ##### Non accessible functions #####
 def build_quote() -> dict:
