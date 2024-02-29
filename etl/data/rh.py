@@ -106,6 +106,7 @@ class RH_CRYPTO():
     
     def buy_crypto(self, symbol: str) -> Any:
         """Buys the specified crypto."""
+        
         return rh.orders.order_buy_crypto_by_price(symbol)
 
     def cancel_all_crypto_orders(self) -> Any:
@@ -119,9 +120,9 @@ class RH_CRYPTO():
     def order_buy_fractional_by_price():
         """Buys a fractional amount of the specified crypto."""
         pass
-        return rh.orders.order_buy_crypto_fractional_by_price()
+        #return rh.orders.order_buy_crypto_fractional_by_price()
     
     def order_sell_fractional_by_price():
         """Sells a fractional amount of the specified crypto."""
         pass
-        return rh.orders.order_sell_fractional_by_price()
+        #return rh.orders.order_sell_fractional_by_price()

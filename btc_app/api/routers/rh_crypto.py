@@ -84,7 +84,6 @@ def get_order_history():
 
     return Response(content=_order_history, media_type="application/json")
 
-
 ##### Non accessible functions #####
 def build_quote() -> dict:
     """Returns the symbols for the stocks in your Robinhood portfolio."""

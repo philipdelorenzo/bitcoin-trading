@@ -1,4 +1,5 @@
 import json
+import redis
 from pprint import pprint
 
 from fastapi import Response
@@ -10,6 +11,7 @@ from btc_app.api.routers import rh_crypto, rh_profile, rh_markets
 # Config data
 from btc_app import _app, _version, _description, _authors
 from btc_app import log_file
+from btc_app import redis_host, redis_port
 
 # Setup logging
 import logging
@@ -55,5 +57,16 @@ def about():
             "version": _version,
             },
         }
+    _response = json.dumps(_data, indent=4, default=str)
+    return Response(content=_response, media_type="application/json")
+
+@app.get("/test")
+def test():
+    """A public endpoint that does not require any authentication."""
+    r = redis.Redis(host=redis_host, port=redis_port, db=0)
+    _data = r.get("headlines")
+    if type(_data) == bytes:
+        _data = _data.decode('utf-8')
+
     _response = json.dumps(_data, indent=4, default=str)
     return Response(content=_response, media_type="application/json")
