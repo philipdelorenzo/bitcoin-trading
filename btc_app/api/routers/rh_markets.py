@@ -55,13 +55,12 @@ async def calculate_market_data(
     data = {
         "symbol": symbol,
         "cash": '${:,.2f}'.format(float(cash)),
-        "number_of_investments": number_of_investments,
+        "number_of_≈investments": number_of_investments,
         "purchased_price": '${:,.2f}'.format(float(purchased_price)),
         "current_price": '${:,.2f}'.format(float(current_price)),
         "percentage_change": percentage_change
     }
 
-    #logger.info({"timestamp": datetime.datetime.now(), "data": data, "symbol": symbol, "message": f"Calculating market data for symbol: {symbol}"})
     if percentage_change > 3.5:
         _purchase_amount = cash_to_dispatch(cash=cash, number_of_investments=number_of_investments)
         logger.info({"timestamp": datetime.datetime.now(), "data": data, "symbol": symbol, "message": f"Calculated a sell signal for symbol: {symbol} | Dispatching {_purchase_amount} cash to {symbol}"})

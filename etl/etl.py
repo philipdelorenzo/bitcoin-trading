@@ -8,6 +8,7 @@ from data.headlines import TimPool
 from data.rh import RH_CRYPTO
 from data.config import redis_host, redis_port, redis_password
 from data.config import log_file
+from data.stock_quotes import quote, month_history, year_history, ten_day_history
 
 # Connect to Robinhood
 rhood = RH_CRYPTO()
@@ -27,6 +28,20 @@ fh = RotatingFileHandler(
 fh.setLevel(logging.INFO)
 fh.setFormatter(formatter)
 logger.addHandler(fh)
+
+# Let's get data from Yahoo Finance
+def pull_yfinance_data(yfdata: dict = {}) -> dict:
+    for ticker in rhood.get_crypto_symbols():
+        yfdata[ticker] = quote(stock=ticker) # Capture the Yahoo Finance quotes
+        yfdata[ticker].update({"history": {
+            "10_day": ten_day_history(stock=ticker),
+            "month": month_history(stock=ticker),
+            "year": year_history(stock=ticker)
+            }
+        }) # Add a timestamp to the data
+    
+    return yfdata
+
 
 # Let's get the data from Robinhood and save it to Redis
 def pull_rhood_values(data: dict = {}) -> dict:
@@ -55,12 +70,17 @@ def pull_headlines(headlines: dict = {}) -> dict:
 while True:
     data = pull_rhood_values() # This gets the values from Robinhood and updates the data dictionary
     headlines = pull_headlines() # This gets the headlines from Tim Pool and updates the headlines dictionary
+    ydata = pull_yfinance_data() # This gets the Yahoo Finance quotes and updates the yfinance_quotes dictionary
 
     # Save the data to Redis
     for k, v in data.items():
         r.set(k, json.dumps(v)) # Save the data to Redis
     
     logger.info(f"Data saved to Redis - {data.keys()}")
+
+    # Save the Yahoo Finance quotes to Redis
+    for k, v in ydata.items():
+        r.set(k, json.dumps(v)) # Save the data to Redis
 
     # Save the headlines to Redis
     for k, v in headlines.items():

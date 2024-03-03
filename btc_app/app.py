@@ -63,10 +63,14 @@ def about():
 @app.get("/test")
 def test():
     """A public endpoint that does not require any authentication."""
-    r = redis.Redis(host=redis_host, port=redis_port, db=0)
-    _data = r.get("headlines")
-    if type(_data) == bytes:
-        _data = _data.decode('utf-8')
-
+    _data = {
+        "status": status.HTTP_200_OK,
+        "app": {
+            "name": _app,
+            "description": _description,
+            "authors": _authors,
+            "version": _version,
+            },
+        }
     _response = json.dumps(_data, indent=4, default=str)
     return Response(content=_response, media_type="application/json")

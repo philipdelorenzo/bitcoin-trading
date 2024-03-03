@@ -104,6 +104,9 @@ class RH_CRYPTO():
         """Returns the user's order history."""
         return rh.orders.get_all_crypto_orders(info=None)
     
+
+
+    ### This belong in the trade_logic module, not in the ETL module.
     def buy_crypto(self, symbol: str) -> Any:
         """Buys the specified crypto."""
         
