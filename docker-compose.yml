@@ -21,7 +21,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./etl_data:/etl_data
+      - ./btc_app_data:/btc_app_data
     links:
       - redis
     depends_on:
@@ -45,6 +45,31 @@ services:
     #  - ""
     ports:
       - 8000:8000
+    links:
+      - redis
+      - etl
+    depends_on:
+      - redis
+      - etl
+    networks:
+      - trades
+    #command: ["./wait-for-it.sh", "db:5432", "--", "scripts/run.sh"]
+
+  back_testing:
+    build:
+      context: .
+      dockerfile: Dockerfile.back_testing
+    hostname: back_testing
+    restart: always
+    env_file:
+      - .env
+      - .redis_key
+    volumes:
+      - ./back_testing:/back_testing
+    #volumes_from:
+    #  - ""
+    ports:
+      - 8001:8000
     links:
       - redis
       - etl

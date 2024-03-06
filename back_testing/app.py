@@ -9,8 +9,8 @@ from fastapi.responses import RedirectResponse, JSONResponse
 from back_testing.routers import testing
 
 # Config data
-from config import log_file
-from config import redis_host, redis_port
+from back_testing.config import log_file
+from back_testing.config import redis_host, redis_port
 
 # Setup logging
 import logging
