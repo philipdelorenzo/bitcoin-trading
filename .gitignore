@@ -1,5 +1,6 @@
 # btc_app
 /temp/**
+**/test
 .api_key
 .redis_key
 /etl_data

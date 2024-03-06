@@ -4,6 +4,7 @@ import time
 import logging
 from logging.handlers import RotatingFileHandler
 
+from pprint import pprint
 from data.headlines import TimPool
 from data.rh import RH_CRYPTO
 from data.config import redis_host, redis_port, redis_password
@@ -30,18 +31,52 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 # Let's get data from Yahoo Finance
-def pull_yfinance_data(yfdata: dict = {}) -> dict:
+def pull_yfinance_data(yfdata: dict = {}, _tticker: str = None) -> dict:
     for ticker in rhood.get_crypto_symbols():
-        yfdata[ticker] = quote(stock=ticker) # Capture the Yahoo Finance quotes
-        yfdata[ticker].update({"history": {
-            "10_day": ten_day_history(stock=ticker),
-            "month": month_history(stock=ticker),
-            "year": year_history(stock=ticker)
-            }
-        }) # Add a timestamp to the data
-    
-    return yfdata
+        if ticker == "ETH":
+            _tticker = "ETH-USD"
+        
+        if ticker == "BTC":
+            _tticker = "BTC-USD"
 
+        if "_tticker" in locals() or "_tticker" in globals() and _tticker is not None:
+            print(f"Getting Yahoo stock quote for {_tticker}...")
+            ten_day = ten_day_history(stock=_tticker).to_dict()
+            ten_day = to_json(ten_day)
+
+            month = month_history(stock=_tticker).to_dict()
+            month = to_json(month)
+
+            year = year_history(stock=_tticker).to_dict()
+            year = to_json(year)
+        
+            yfdata[ticker] = {}
+            yfdata[ticker]["quote"] = quote(stock=_tticker) # Capture the Yahoo Finance quotes
+            yfdata[ticker]["history"] = {
+                "10_day": ten_day,
+                "month": month,
+                "year": year,
+                }
+        else:
+            print(f"Getting Yahoo stock quote for {ticker}...")
+            ten_day = ten_day_history(stock=ticker).to_dict()
+            ten_day = to_json(ten_day)
+
+            month = month_history(stock=ticker).to_dict()
+            month = to_json(month)
+
+            year = year_history(stock=ticker).to_dict()
+            year = to_json(year)
+        
+            yfdata[ticker] = {}
+            yfdata[ticker]["quote"] = quote(stock=ticker) # Capture the Yahoo Finance quotes
+            yfdata[ticker]["history"] = {
+                "10_day": ten_day,
+                "month": month,
+                "year": year,
+                }
+
+    return yfdata
 
 # Let's get the data from Robinhood and save it to Redis
 def pull_rhood_values(data: dict = {}) -> dict:
@@ -67,6 +102,16 @@ def pull_headlines(headlines: dict = {}) -> dict:
     headlines.update({"timcast_irl": tp.article_titles})
     return headlines
 
+# Convert to JSON
+def to_json(data: dict) -> str:
+    try:
+        json.dumps(data, indent=4, default=str)
+    except TypeError as e:
+        for k, v in data.items():
+            data[k] = str(v)
+        
+    return data
+
 while True:
     data = pull_rhood_values() # This gets the values from Robinhood and updates the data dictionary
     headlines = pull_headlines() # This gets the headlines from Tim Pool and updates the headlines dictionary
@@ -76,11 +121,13 @@ while True:
     for k, v in data.items():
         r.set(k, json.dumps(v)) # Save the data to Redis
     
-    logger.info(f"Data saved to Redis - {data.keys()}")
+    logger.info(f"RH Data saved to Redis - {data.keys()}")
 
     # Save the Yahoo Finance quotes to Redis
     for k, v in ydata.items():
         r.set(k, json.dumps(v)) # Save the data to Redis
+    
+    logger.info(f"Yahoo Finance Data saved to Redis - {ydata.keys()}")
 
     # Save the headlines to Redis
     for k, v in headlines.items():

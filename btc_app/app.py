@@ -6,7 +6,7 @@ from fastapi import Response
 from fastapi import FastAPI, status
 from fastapi.responses import RedirectResponse, JSONResponse
 
-from btc_app.api.routers import rh_crypto, rh_profile, rh_markets
+from btc_app.api.routers import rh_crypto, rh_profile, rh_markets, research
 
 # Config data
 from btc_app import _app, _version, _description, _authors
@@ -34,6 +34,7 @@ app = FastAPI(prefix="/robinhood")
 app.include_router(rh_profile.router)
 app.include_router(rh_crypto.router)
 app.include_router(rh_markets.router)
+app.include_router(research.router)
 
 @app.get("/", response_class=RedirectResponse)
 def home():

@@ -7,7 +7,7 @@ from halo import Halo
 # Run time consuming work here
 # You can also change properties for spinner as and when you want
 
-test_stocks = ['ETH-USD', 'BTC']
+test_stocks = ['ETH-USD', 'BTC-USD']
 
 def quote(stock: str) -> dict:
     with Halo(text=f'Loading {stock} stock data...', spinner='dots'):
@@ -25,9 +25,11 @@ def ten_day_history(stock: str) -> dict:
     endDate = now
 
     GetStockInformation = yahooFinance.Ticker(stock)
-    
-    return GetStockInformation.history(start=startDate,
-                                            end=endDate)
+
+    # Let's convert the data to a dictionary
+    data = GetStockInformation.history(start=startDate, end=endDate)
+
+    return data
 
 def month_history(stock: str) -> dict:
     now = datetime.datetime.now().date()
@@ -40,8 +42,9 @@ def month_history(stock: str) -> dict:
 
     GetStockInformation = yahooFinance.Ticker(stock)
     
-    return GetStockInformation.history(start=startDate,
+    data = GetStockInformation.history(start=startDate,
                                             end=endDate)
+    return data
 
 def year_history(stock: str) -> dict:
     now = datetime.datetime.now().date()
@@ -54,8 +57,9 @@ def year_history(stock: str) -> dict:
 
     GetStockInformation = yahooFinance.Ticker(stock)
     
-    return GetStockInformation.history(start=startDate,
+    data = GetStockInformation.history(start=startDate,
                                             end=endDate)
+    return data
 
 if __name__ == "__main__":
     for stock in test_stocks:
@@ -71,4 +75,13 @@ if __name__ == "__main__":
 
             #pprint(quote(stock=stock))
             #pprint(month_history(stock=stock))
-            pprint(ten_day_history(stock=stock))
+            test = month_history(stock=stock)
+
+            test = test.to_dict()
+            import json
+
+            for k, v in test.items():
+                test[k] = str(v)
+            f = json.dumps(test)
+
+
