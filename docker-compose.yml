@@ -1,0 +1,103 @@
+version: '3'
+
+services:
+  # Redis - result backend
+  redis:
+    image: redis:7.2.4
+    hostname: redis
+    restart: on-failure
+    ports:
+      - 6379:6379
+    networks:
+      - trades
+
+  # ETL - Extract, Transform, Load
+  etl:
+    build:
+      context: .
+      dockerfile: Dockerfile.etl
+    hostname: etl
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./btc_app_data:/btc_app_data
+    links:
+      - redis
+    depends_on:
+      - redis
+    networks:
+      - trades
+
+  ## Trades API
+  btc_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.btc_app
+    hostname: btc_app
+    restart: always
+    env_file:
+      - .env
+      - .redis_key
+    volumes:
+      - ./btc_app_data:/btc_app_data
+    #volumes_from:
+    #  - ""
+    ports:
+      - 8000:8000
+    links:
+      - redis
+      - etl
+    depends_on:
+      - redis
+      - etl
+    networks:
+      - trades
+    #command: ["./wait-for-it.sh", "db:5432", "--", "scripts/run.sh"]
+
+  back_testing:
+    build:
+      context: .
+      dockerfile: Dockerfile.back_testing
+    hostname: back_testing
+    restart: always
+    env_file:
+      - .env
+      - .redis_key
+    volumes:
+      - ./back_testing:/back_testing
+    #volumes_from:
+    #  - ""
+    ports:
+      - 8001:8000
+    links:
+      - redis
+      - etl
+    depends_on:
+      - redis
+      - etl
+    networks:
+      - trades
+    #command: ["./wait-for-it.sh", "db:5432", "--", "scripts/run.sh"]
+
+  #db:
+  #  build:
+  #    context: database
+  #    dockerfile: Dockerfile
+  #  volumes:
+  #    - ./development/data/db:/var/lib/postgresql/data
+  #    - ./database/init/postgres:/docker-entrypoint-initdb.d/
+  #  hostname: db
+  #  container_name: db
+  #  ports:
+  #    - 5432:5432
+  #  env_file:
+  #    - ~/.unitytree/.env
+  #  networks:
+  #    - unitytree
+  #  restart: always
+
+networks:
+  trades:
+    driver: bridge
+

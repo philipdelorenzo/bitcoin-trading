@@ -1,0 +1,13 @@
+#numpy==1.26.4
+numpy
+yahoo-fin==0.8.9.1
+keras==2.15.0
+tensorflow==2.15.0
+scikit-learn==1.4.1.post1
+vectorbt==0.26.0
+redis==5.0.1
+yfinance==0.2.37
+TA-Lib==0.4.28
+uvicorn==0.27.1
+fastapi==0.109.2
+python-dotenv==1.0.1

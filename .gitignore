@@ -1,3 +1,11 @@
+# btc_app
+/temp/**
+**/test
+.api_key
+.redis_key
+/etl_data
+/btc_app_data
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

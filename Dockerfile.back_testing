@@ -1,0 +1,32 @@
+FROM python:3.10.0-slim
+
+# Set the working directory in the container
+ARG USER=btc
+ARG GROUP=app
+ARG PORT=8000
+
+# Create a group and user
+RUN groupadd -r ${GROUP} && useradd -m -r -g ${GROUP} ${USER}
+RUN mkdir -p /btc_app_data && chown -R ${USER}:${GROUP} /btc_app_data
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY /back_testing /app/back_testing
+COPY .env /app
+COPY .redis_key /app
+COPY .api_key /app
+RUN chown -R ${USER}:${GROUP} /app
+RUN cd /app/back_testing || exit 1 \
+    && bash install_linux.sh
+USER ${USER}
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --upgrade pip \
+    && pip install -r /app/back_testing/requirements.txt
+
+# Create the directory
+EXPOSE ${PORT}
+
+CMD ["python", "-m", "uvicorn", "back_testing.app:app", "--reload", "--host", "0.0.0.0"]
