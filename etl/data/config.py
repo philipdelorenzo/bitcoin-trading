@@ -19,4 +19,4 @@ redis_port = os.getenv("REDIS_PORT")
 redis_password = os.getenv("REDIS_PASSWORD")
 
 # Logging Data
-log_file = os.path.join("/etl_data", "etl.log")
+log_file = os.path.join("/btc_app_data", "etl.log")
