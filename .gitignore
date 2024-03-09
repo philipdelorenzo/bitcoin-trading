@@ -1,3 +1,8 @@
+# documentation
+/docs/etl
+/docs/btc_app
+/docs/back_testing
+
 # btc_app
 /temp/**
 **/test

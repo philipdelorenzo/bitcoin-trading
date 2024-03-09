@@ -1,4 +1,10 @@
 # bitcoin-trading
 
-Personal application for trading BTC, ETH, XPR, ADA and other alt coins.
+This application has an updated, self-hosted documentation site to make it easier for accessing
+information, instructions, etc.
 
+To build the docs:
+
+```bash
+make build-docs
+```
