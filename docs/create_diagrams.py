@@ -1,6 +1,6 @@
 """This module is built to create a design builder for the project."""
 import os
-from docs.create_diagrams import Diagram, Cluster
+from diagrams import Diagram, Cluster
 from diagrams.generic.os import Ubuntu, Raspbian, Debian, RedHat, Centos
 from diagrams.programming.framework import FastAPI, Flask, Django, React
 from diagrams.onprem.inmemory import Redis
