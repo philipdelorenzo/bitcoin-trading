@@ -31,7 +31,7 @@ nav:
   - 'Developer Docs':
     - 'API': 'api.md'
     - 'Data - ETL': 'data.md'
-    - 'Strategies': '../back_testing/index.md'
+    - 'Strategies': 'back_testing/index.md'
     - 'Design': 'design.md'
   - 'About': 'about.md'
 

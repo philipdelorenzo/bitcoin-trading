@@ -34,6 +34,7 @@ run: ## Start the Crypto Coin Trading UI server
 ##@ Section 3: Documentation
 build-docs: ## Build the documentation
 	$(info ******** Building the documentation ********)
+	@bash docs/build.sh
 	@bash -c "mkdocs build"
 
 serve-docs: ## Serve the documentation
