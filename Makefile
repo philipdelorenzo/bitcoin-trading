@@ -19,6 +19,7 @@ default:
 .PHONY: build
 install: ## Start the Crypto Coin Trading UI server
 	$(info ******** Installing the Crypto Coin Trading UI ********)
+	@brew bundle
 	@bash -c "python -m poetry install"
 
 ##@ Section 2: Local Run Commands

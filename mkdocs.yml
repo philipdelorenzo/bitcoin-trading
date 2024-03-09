@@ -18,7 +18,9 @@ plugins:
             show_source: false
       watch:
         - docs/
-        - /back_testing/README.md
+        - back_testing/index.md
+        - etl/index.md
+        - btc_app/index.md
 
 markdown_extensions:
   - toc:
@@ -29,8 +31,8 @@ nav:
   - 'Getting Started':
     - 'Installation': 'getting_started.md'
   - 'Developer Docs':
-    - 'API': 'api.md'
-    - 'Data - ETL': 'data.md'
+    - 'API': 'btc_app/index.md'
+    - 'Data - ETL': 'etl/index.md'
     - 'Strategies': 'back_testing/index.md'
     - 'Design': 'design.md'
   - 'About': 'about.md'
