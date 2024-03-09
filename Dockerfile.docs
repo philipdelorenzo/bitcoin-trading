@@ -1,0 +1,43 @@
+FROM python:3.12-slim
+
+# Set the working directory in the container
+# The DEPLOYMENT_ENVIRONMENT variable is used to determine which environment variables to use
+# The default value is dev
+ARG DOCKER=True
+ARG USER=docs
+ARG GROUP=app
+
+# Create a group and user
+RUN groupadd -r ${GROUP} && useradd -m -r -g ${GROUP} ${USER}
+RUN apt-get update && apt-get install -y lsb-release curl gpg graphviz make
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY docs /app/docs
+COPY docs/requirements.txt /app/requirements.txt
+COPY docs/mkdocs.yml /app/mkdocs.yml
+COPY docs/deploy.sh /app
+
+# Remove the files that are not needed
+RUN rm -rf /app/docs/requirements.txt \
+    && rm -rf /app/docs/mkdocs.yml \
+    && rm -rf /app/docs/*.py \
+    && rm -rf /app/docs/build.sh \
+    && rm -rf /app/docs/dia \
+    && rm -rf /app/docs/__pycache__ \
+    && chmod +x /app/deploy.sh
+
+# Change the ownership of the directory to the user
+RUN chown -R ${USER}:${GROUP} /app
+
+# Switch to the user
+USER ${USER}
+EXPOSE 8100
+
+# Install any needed packages specified in requirements.txt
+RUN python -m pip install --upgrade pip \
+    && python -m pip install -r /app/requirements.txt
+
+ENTRYPOINT [ "/app/deploy.sh" ]

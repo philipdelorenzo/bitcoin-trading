@@ -1,0 +1,36 @@
+site_name: Automated Bitcoin Trading Application
+repo_url: https://github.com/philipdelorenzo/bitcoin-trading
+site_description: |
+  Automated Bitcoin Trading Application
+copyright: Philip De Lorenzo
+
+dev_addr: 0.0.0.0:8100
+
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_source: false
+
+markdown_extensions:
+  - toc:
+      permalink: true
+
+nav:
+  - 'Index': 'index.md'
+  - 'Getting Started':
+    - 'Installation': 'getting_started.md'
+  - 'Developer Docs':
+    - 'API': 'btc_app/index.md'
+    - 'Data - ETL': 'etl/index.md'
+    - 'Strategies': 'back_testing/index.md'
+    - 'Design': 'design.md'
+  - 'About': 'about.md'
+
+links:
+  not_found: '404.md'
+theme: 'material'

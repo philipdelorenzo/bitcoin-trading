@@ -32,7 +32,7 @@ run: ## Start the Crypto Coin Trading UI server
 
 ##\@ Section 4: Dockerfile Build Commands
 
-##@ Section 3: Documentation
+##@ Section 3: Documentation (Local)
 build-docs: ## Build the documentation
 	$(info ******** Building the documentation ********)
 	@bash docs/build.sh
@@ -41,6 +41,11 @@ build-docs: ## Build the documentation
 serve-docs: ## Serve the documentation
 	$(info ******** Serving the documentation ********)
 	@bash -c "mkdocs serve"
+
+deploy-docs: ## Deploy the documentation
+	$(info ******** Deploying the documentation ********)
+	@make build-docs
+	@docker build --file Dockerfile.docs -t btc_app_docs:latest .
 
 ### Help Section
 help:

@@ -1,0 +1,7 @@
+# --- Documentation --- #
+mkdocs==1.5.2
+mkdocs-material==9.2.4
+mkdocs-material-extensions==1.1.1
+markupsafe==2.0.1 # This is needed for mkdocs
+mkdocstrings==0.22.0
+mkdocstrings-python==1.5.2
