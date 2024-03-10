@@ -1,0 +1,22 @@
+# This is the Docker ignore file list
+Dockerfile**
+temp/
+scripts/
+btc_app_data/
+site/
+.api_key
+.env
+.git/
+.gitignore
+.redis_key
+.dockerignore
+config.ini
+.DS_Store
+.tool-versions
+Makefile
+README.md
+Brewfile*
+poetry.lock
+pyproject.toml
+docker-compose.yml
+requirements.txt
