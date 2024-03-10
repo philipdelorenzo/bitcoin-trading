@@ -12,8 +12,16 @@ Mac:
 bash install.sh
 ```
 
-Linux:
+Linux _(this installation should be used in the Dockerfile)_:
 
 ```bash
 bash install_linux.sh
 ```
+
+## Developer Documentation
+
+- [Config Package](./docs/config.md)
+- [Machine Learning Package](./docs/machine_learning.md)
+- [Patterns Package](./docs/patterns.md)
+- [Routers Package](./docs/routers.md)
+- [Scanner Package](./docs/scanner.md)

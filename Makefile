@@ -46,6 +46,9 @@ deploy-docs: ## Deploy the documentation (Docker Production)
 	$(info ******** Deploying the documentation ********)
 	@make build-docs
 	@docker build --file Dockerfile.docs -t btc_app_docs:latest .
+	
+	# Here we will need to push the Docker image to a repoistory that our Kubernetes cluster can access.
+	# For now, we will just run the container locally
 
 ### Help Section
 help:

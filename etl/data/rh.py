@@ -54,7 +54,14 @@ class RH_CRYPTO():
         return rh.crypto.get_crypto_positions(info=None)
      
     def get_crypto_symbols(self, symbols: list = []) -> list:
-        """Returns the symbols for the stocks in your Robinhood portfolio."""
+        """Returns the symbols for the stocks in your Robinhood portfolio.
+        
+        Args:
+            symbols (list, optional): The list of symbols. Defaults to [].
+
+        Returns:
+            list: The list of symbols.
+        """
         symbols = []
         holdings_data = rh.crypto.get_crypto_positions(info=None)
         for item in holdings_data:
@@ -66,8 +73,16 @@ class RH_CRYPTO():
         
         return symbols
     
-    def get_crypto_quote(self, ticker, info=None):
-        """Returns the current price of the specified stock."""
+    def get_crypto_quote(self, ticker, info=None) -> rh.crypto.get_crypto_quote:
+        """Returns the current price of the specified stock.
+        
+        Args:
+            ticker (str): The stock ticker.
+            info (str, optional): The information to return. Defaults to None.
+
+        Returns:
+            dict: The stock quote.
+        """
         return rh.crypto.get_crypto_quote(ticker, info=None)
 
     def get_markets(self):
@@ -101,15 +116,20 @@ class RH_CRYPTO():
         return _response
 
     def get_order_history(self) -> list:
-        """Returns the user's order history."""
+        """Returns the user's order history.
+        
+        Returns:
+            list: A list of the user's order history.
+        """
         return rh.orders.get_all_crypto_orders(info=None)
     
-
-
     ### This belong in the trade_logic module, not in the ETL module.
     def buy_crypto(self, symbol: str) -> Any:
-        """Buys the specified crypto."""
+        """Buys the specified crypto.
         
+        Args:
+            symbol (str): The crypto symbol.
+        """
         return rh.orders.order_buy_crypto_by_price(symbol)
 
     def cancel_all_crypto_orders(self) -> Any:

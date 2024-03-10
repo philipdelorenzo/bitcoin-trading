@@ -5,3 +5,7 @@ in the API. The reason for this is that it abstracts security, as well as offers
 zone for the data so that the Streamlit UI can more quickly access the information.
 
 This application is a script that runs on a cadence to populate the in memory database.
+
+## Developer Documentation
+
+- [Data Package](./docs/data.md)

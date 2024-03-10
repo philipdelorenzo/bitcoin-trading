@@ -35,5 +35,4 @@ RUN pip install --upgrade pip \
 
 ENV DEPLOYMENT_ENVIRONMENT=${DEPLOYMENT_ENVIRONMENT}
 
-#CMD ["python", "etl.py"]
 ENTRYPOINT [ "bash", "/app/run.sh" ]

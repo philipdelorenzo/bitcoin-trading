@@ -10,12 +10,28 @@ from halo import Halo
 test_stocks = ['ETH-USD', 'BTC-USD']
 
 def quote(stock: str) -> dict:
+    """Returns the stock quote for the specified stock.
+    
+    Args:
+        stock (str): The stock ticker.
+
+    Returns:
+        dict: The stock quote data.
+    """
     with Halo(text=f'Loading {stock} stock data...', spinner='dots'):
 
         GetStockInformation = yahooFinance.Ticker(stock)
         return GetStockInformation.info
 
 def ten_day_history(stock: str) -> dict:
+    """Returns the stock quote for the specified stock in ten day history.
+    
+    Args:
+        stock (str): The stock ticker.
+
+    Returns:
+        dict: The stock quote data.
+    """
     now = datetime.datetime.now().date()
 
     # startDate , as per our convenience we can modify
@@ -32,6 +48,14 @@ def ten_day_history(stock: str) -> dict:
     return data
 
 def month_history(stock: str) -> dict:
+    """Returns the stock quote for the specified stock in one month history.
+    
+    Args:
+        stock (str): The stock ticker.
+
+    Returns:
+        dict: The stock quote data.
+    """
     now = datetime.datetime.now().date()
 
     # startDate , as per our convenience we can modify
@@ -47,6 +71,14 @@ def month_history(stock: str) -> dict:
     return data
 
 def year_history(stock: str) -> dict:
+    """Returns the stock quote for the specified stock in one year history.
+
+    Args:
+        stock (str): The stock ticker.
+
+    Returns:
+        dict: The stock quote data.
+    """
     now = datetime.datetime.now().date()
 
     # startDate , as per our convenience we can modify

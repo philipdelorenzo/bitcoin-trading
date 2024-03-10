@@ -17,6 +17,14 @@ api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")  # use token authentication
 
 def api_key_auth(api_key_header: str = Security(api_key_header)) -> str:
+    """API Key Authentication.
+    
+    Args:
+        api_key_header (str): The API key header.
+    
+    Returns:
+        str: The API key header.
+    """
     if api_key_header is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -32,8 +40,20 @@ def api_key_auth(api_key_header: str = Security(api_key_header)) -> str:
     )
 
 def api_key_oauth(api_key: str = Depends(oauth2_scheme)):
+    """API Key OAuth.
+
+    Note: Currently unused in the application.
+    
+    Args:
+        api_key (str): The API key.
+    
+    Returns:
+        str: The API key.
+    """
     if api_key not in api_keys:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or missing API Key",
         )
+
+    return api_key
