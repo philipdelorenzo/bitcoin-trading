@@ -27,3 +27,8 @@ _"user journey"_ standpoint.
 ```bash
 docker compose up --build
 ```
+
+### Security
+
+Please read the [Security](./extra_documentation/security.md) section and become acclimatized to how the applications
+are secured _(both from the UI and interoperable)_.
