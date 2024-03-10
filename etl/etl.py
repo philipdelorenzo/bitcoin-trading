@@ -1,3 +1,4 @@
+import os
 import json
 import redis
 import time
@@ -11,9 +12,15 @@ from data.config import redis_host, redis_port, redis_password
 from data.config import log_file
 from data.stock_quotes import quote, month_history, year_history, ten_day_history
 
+BASE = os.path.abspath(os.path.dirname(__file__))
+MAIN = os.path.abspath(os.path.join(BASE, ".."))
+
 # Connect to Robinhood
 rhood = RH_CRYPTO()
 tp = TimPool()
+
+if __name__ == "__main__":
+    log_file = os.path.join(MAIN, "btc_app_data", "etl.log")
 
 # Connect to Redis
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
@@ -33,11 +40,15 @@ logger.addHandler(fh)
 # Let's get data from Yahoo Finance
 def pull_yfinance_data(yfdata: dict = {}, _tticker: str = None) -> dict:
     for ticker in rhood.get_crypto_symbols():
+        print(ticker)
         if ticker == "ETH":
             _tticker = "ETH-USD"
         
         if ticker == "BTC":
             _tticker = "BTC-USD"
+
+        if ticker == "SHIB":
+            _tticker = "SHIB-USD"
 
         if "_tticker" in locals() or "_tticker" in globals() and _tticker is not None:
             print(f"Getting Yahoo stock quote for {_tticker}...")

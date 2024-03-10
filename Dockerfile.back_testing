@@ -20,6 +20,7 @@ COPY .api_key /app
 RUN chown -R ${USER}:${GROUP} /app
 RUN cd /app/back_testing || exit 1 \
     && bash install_linux.sh
+
 USER ${USER}
 
 # Install any needed packages specified in requirements.txt

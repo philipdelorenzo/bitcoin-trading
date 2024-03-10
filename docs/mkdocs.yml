@@ -13,6 +13,7 @@ plugins:
       default_handler: python
       handlers:
         python:
+          paths: [btc_app, etl, back_testing]
           options:
             show_source: false
 

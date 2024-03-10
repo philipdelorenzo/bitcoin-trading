@@ -7,6 +7,7 @@ ARG PORT=8000
 
 # Create a group and user
 RUN groupadd -r ${GROUP} && useradd -m -r -g ${GROUP} ${USER}
+RUN apt update && apt install -y libpq-dev gcc graphviz
 RUN mkdir -p /btc_app_data && chown -R ${USER}:${GROUP} /btc_app_data
 
 # Set the working directory in the container
@@ -25,10 +26,11 @@ RUN chown -R ${USER}:${GROUP} /app
 USER ${USER}
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
+RUN python -m pip install --upgrade pip \
+    && python -m pip install -r /app/requirements.txt
 
-RUN python -m poetry install
+RUN python -m poetry config installer.max-workers 15
+RUN python -m poetry install --no-interaction
 
 # Create the directory
 EXPOSE ${PORT}

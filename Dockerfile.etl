@@ -10,7 +10,7 @@ ARG GROUP=app
 # Create a group and user
 RUN groupadd -r ${GROUP} && useradd -m -r -g ${GROUP} ${USER}
 RUN apt-get update && apt-get install -y lsb-release curl gpg redis-server
-RUN mkdir -p /etl_data && chown -R ${USER}:${GROUP} /etl_data
+#RUN mkdir -p /etl_data && chown -R ${USER}:${GROUP} /etl_data
 
 # Set the working directory in the container
 WORKDIR /app
