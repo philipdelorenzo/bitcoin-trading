@@ -7,23 +7,6 @@ from btc_app import transaction_log_file
 from btc_app.rh_src.robinhood import RH_CRYPTO
 from btc_app.api.trade_logic.crypto import cash_to_dispatch
 
-# Setup logging
-import logging
-from pythonjsonlogger import jsonlogger
-from logging.handlers import RotatingFileHandler
-
-_format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-logging.basicConfig(level=logging.INFO, format=_format)
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-formatter = jsonlogger.JsonFormatter()
-fh = RotatingFileHandler(
-    transaction_log_file, maxBytes=(1048576*5), backupCount=10
-)
-fh.setLevel(logging.INFO)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
-
 router = APIRouter(
     prefix="/markets",
     tags=["markets"],

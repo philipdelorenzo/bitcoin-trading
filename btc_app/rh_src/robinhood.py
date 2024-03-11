@@ -2,10 +2,15 @@ import os
 import pyotp
 import requests
 import robin_stocks.robinhood as rh
+import logging
+from logging.handlers import RotatingFileHandler
 
+import logging_loki
 from typing import Any
 from btc_app import robinhood_user, robinhood_pass, robinhood_opt_key
+from btc_app.config import log_file
 
+from btc_app.logger import logger
 class RH_CRYPTO():
     """This class instantiates all the methods needed to interact with the Robinhood API (crpyto)."""
     def __init__(self):
@@ -27,7 +32,7 @@ class RH_CRYPTO():
         try:
             rh.login(_username, _password, mfa_code=totp)
         except Exception as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}")
             raise e
   
     def _get_portfolio_symbols(self):
@@ -43,6 +48,7 @@ class RH_CRYPTO():
             symbol = instrument_data["symbol"]
             symbols.append(symbol)
         
+        logger.info(f"Retrieving crypto ticker(s) from Robinhood.")
         return symbols
     
     def get_crypto_symbols(self, symbols: list = []) -> list:
@@ -56,26 +62,32 @@ class RH_CRYPTO():
             symbol = item["currency"]["code"]
             symbols.append(symbol) if symbol not in symbols else None
         
+        logger.info(f"Retrieving symbols from Robinhood.")
         return symbols
     
     def _get_crypto_portfolio(self):
         """Returns the symbols for the stocks in your Robinhood portfolio."""
+        logger.info(f"Retrieving crypto positions from Robinhood.")
         return rh.crypto.get_crypto_positions(info=None)
     
     def get_crypto_quote(self, ticker, info=None):
         """Returns the current price of the specified stock."""
+        logger.info(f"Retrieving crypto quote from Robinhood - {ticker}.")
         return rh.crypto.get_crypto_quote(ticker, info=None)
 
     def get_markets(self):
         """Returns the current markets and data associated with them."""
+        logger.info(f"Retrieving market data from Robinhood.")
         return rh.markets.get_markets()
 
     def _get_account_profile(self):
         """Returns the user's account profile information."""
+        logger.info(f"Retrieving profile from Robinhood.")
         return rh.profiles.load_account_profile()
     
     def _get_investment_profile(self):
         """Returns the user's investment profile information."""
+        logger.info(f"Retrieving investment profile from Robinhood.")
         return rh.profiles.load_investment_profile()
 
     def _get_phoenix_account(self):

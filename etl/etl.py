@@ -2,7 +2,6 @@ import os
 import json
 import redis
 import time
-import logging
 from logging.handlers import RotatingFileHandler
 
 from pprint import pprint
@@ -26,16 +25,14 @@ if __name__ == "__main__":
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
 
 # Set up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh = RotatingFileHandler(
-    log_file, maxBytes=(1048576*5), backupCount=10
-)
-fh.setLevel(logging.INFO)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
+from logger import logger
+
+# Setup logging
+from starlette.exceptions import HTTPException
+from fastapi.exceptions import RequestValidationError
+from exception_handlers import request_validation_exception_handler, http_exception_handler, unhandled_exception_handler
+from middleware import log_request_middleware
+
 
 # Let's get data from Yahoo Finance
 def pull_yfinance_data(yfdata: dict = {}, _tticker: str = None) -> dict:

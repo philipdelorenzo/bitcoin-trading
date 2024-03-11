@@ -7,14 +7,9 @@ from btc_app.api.auth import api_key_auth
 from btc_app import transaction_log_file
 from btc_app.rh_src.robinhood import RH_CRYPTO
 from btc_app.api.trade_logic.crypto import cash_to_dispatch
-from btc_app import redis_host, redis_port, log_file
+from btc_app import redis_host, redis_port
 
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
-
-# Setup logging
-import logging
-#from pythonjsonlogger import jsonlogger
-from logging.handlers import RotatingFileHandler
 
 router = APIRouter(
     prefix="/research",

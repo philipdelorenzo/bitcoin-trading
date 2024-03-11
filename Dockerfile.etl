@@ -20,8 +20,8 @@ COPY /etl /app
 
 # This file needs to be replaced in the production deployment with variables from the environment
 # Github Secrets, AWS Secrets Manager, etc.
-COPY .env /app
-COPY .redis_key /app
+COPY .env /app/.env
+COPY .redis_key /app/.redis_key
 
 # Change the ownership of the directory to the user
 RUN chown -R ${USER}:${GROUP} /app
