@@ -7,7 +7,7 @@ from halo import Halo
 # Run time consuming work here
 # You can also change properties for spinner as and when you want
 
-test_stocks = ['ETH-USD', 'BTC-USD']
+test_stocks = ['ETH-USD', 'BTC-USD', "SHIB-USD"]
 
 def quote(stock: str) -> dict:
     """Returns the stock quote for the specified stock.

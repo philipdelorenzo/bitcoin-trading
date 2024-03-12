@@ -2,15 +2,15 @@ import os
 import json
 import redis
 import time
-import logging
-from logging.handlers import RotatingFileHandler
 
 from pprint import pprint
 from data.headlines import TimPool
 from data.rh import RH_CRYPTO
 from data.config import redis_host, redis_port, redis_password
-from data.config import log_file
 from data.stock_quotes import quote, month_history, year_history, ten_day_history
+
+# Set up logging
+from logger import logger
 
 BASE = os.path.abspath(os.path.dirname(__file__))
 MAIN = os.path.abspath(os.path.join(BASE, ".."))
@@ -24,18 +24,6 @@ if __name__ == "__main__":
 
 # Connect to Redis
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
-
-# Set up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh = RotatingFileHandler(
-    log_file, maxBytes=(1048576*5), backupCount=10
-)
-fh.setLevel(logging.INFO)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
 
 # Let's get data from Yahoo Finance
 def pull_yfinance_data(yfdata: dict = {}, _tticker: str = None) -> dict:

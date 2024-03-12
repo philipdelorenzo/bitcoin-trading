@@ -10,27 +10,25 @@ from btc_app.api.routers import rh_crypto, rh_profile, rh_markets, research
 
 # Config data
 from btc_app import _app, _version, _description, _authors
-from btc_app import log_file
-from btc_app import redis_host, redis_port
+from btc_app import redis_host, redis_port, log_file
+
+from btc_app.logger import logger
 
 # Setup logging
-import logging
-from logging.handlers import RotatingFileHandler
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh = RotatingFileHandler(
-    log_file, maxBytes=(1048576*5), backupCount=10
-)
-fh.setLevel(logging.INFO)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
+from starlette.exceptions import HTTPException
+from fastapi.exceptions import RequestValidationError
+from btc_app.exception_handlers import request_validation_exception_handler, http_exception_handler, unhandled_exception_handler
+from btc_app.middleware import log_request_middleware
 
 # Add basic data to the logfile so we know the app is running
 logger.info(f"App: {_app} | Version: {_version} | Description: {_description} | Authors: {_authors}")
 
 app = FastAPI(prefix="/robinhood")
+app.middleware("http")(log_request_middleware)
+app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(Exception, unhandled_exception_handler)
+
 app.include_router(rh_profile.router)
 app.include_router(rh_crypto.router)
 app.include_router(rh_markets.router)

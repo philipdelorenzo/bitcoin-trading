@@ -1,7 +1,7 @@
 import json
 import redis
 import logging
-from logging.handlers import RotatingFileHandler
+import logging_loki
 
 from fastapi import Response
 from fastapi import Depends, APIRouter
@@ -11,17 +11,6 @@ from btc_app.rh_src.robinhood import RH_CRYPTO
 from btc_app import redis_host, redis_port, log_file
 
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
-
-# Set up logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh = RotatingFileHandler(
-    log_file, maxBytes=(1048576*5), backupCount=10
-)
-fh.setLevel(logging.INFO)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
 
 router = APIRouter(
     prefix="/crypto",
@@ -45,7 +34,7 @@ def crypto_symbols():
     _crypto_symbols = r.get('crypto_symbols')
     if type(_crypto_symbols) == bytes:
         _crypto_symbols = _crypto_symbols.decode('utf-8')
-
+    
     return Response(content=_crypto_symbols, media_type="application/json")
 
 @router.get("/quotes", dependencies=[Depends(api_key_auth)])
