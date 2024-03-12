@@ -13,19 +13,19 @@ from back_testing.config import log_file
 from back_testing.config import redis_host, redis_port
 
 # Setup logging
-from logger import logger
+from . import logger
 
 # Setup logging
 from starlette.exceptions import HTTPException
 from fastapi.exceptions import RequestValidationError
-from exception_handlers import request_validation_exception_handler, http_exception_handler, unhandled_exception_handler
-from middleware import log_request_middleware
+from . import exception_handlers as eh
+from . import middleware
 
 app = FastAPI()
-app.middleware("http")(log_request_middleware)
-app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
-app.add_exception_handler(HTTPException, http_exception_handler)
-app.add_exception_handler(Exception, unhandled_exception_handler)
+app.middleware("http")(middleware.log_request_middleware)
+app.add_exception_handler(RequestValidationError, eh.request_validation_exception_handler)
+app.add_exception_handler(HTTPException, eh.http_exception_handler)
+app.add_exception_handler(Exception, eh.unhandled_exception_handler)
 
 app.include_router(testing.router)
 

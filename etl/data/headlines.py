@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup as bs
-from etl.logger import logger
 
 class TimPool():
     """Class to get the headlines from the Tim Pool website."""

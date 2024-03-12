@@ -8,7 +8,7 @@ from logging.handlers import RotatingFileHandler
 import logging_loki
 from typing import Any
 from btc_app import robinhood_user, robinhood_pass, robinhood_opt_key
-from btc_app.config import log_file
+from btc_app import log_file
 
 from btc_app.logger import logger
 class RH_CRYPTO():

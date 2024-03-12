@@ -5,7 +5,7 @@ import logging_loki
 
 from fastapi import Request
 
-from btc_app import logger
+from btc_app.logger import logger
 
 async def log_request_middleware(request: Request, call_next):
     """

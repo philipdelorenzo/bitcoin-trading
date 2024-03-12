@@ -2,14 +2,15 @@ import os
 import json
 import redis
 import time
-from logging.handlers import RotatingFileHandler
 
 from pprint import pprint
 from data.headlines import TimPool
 from data.rh import RH_CRYPTO
 from data.config import redis_host, redis_port, redis_password
-from data.config import log_file
 from data.stock_quotes import quote, month_history, year_history, ten_day_history
+
+# Set up logging
+from logger import logger
 
 BASE = os.path.abspath(os.path.dirname(__file__))
 MAIN = os.path.abspath(os.path.join(BASE, ".."))
@@ -23,16 +24,6 @@ if __name__ == "__main__":
 
 # Connect to Redis
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
-
-# Set up logging
-from logger import logger
-
-# Setup logging
-from starlette.exceptions import HTTPException
-from fastapi.exceptions import RequestValidationError
-from exception_handlers import request_validation_exception_handler, http_exception_handler, unhandled_exception_handler
-from middleware import log_request_middleware
-
 
 # Let's get data from Yahoo Finance
 def pull_yfinance_data(yfdata: dict = {}, _tticker: str = None) -> dict:

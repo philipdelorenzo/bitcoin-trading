@@ -3,7 +3,6 @@ import datetime
 
 from pprint import pprint
 from halo import Halo
-from etl.logger import logger
 
 # Run time consuming work here
 # You can also change properties for spinner as and when you want
